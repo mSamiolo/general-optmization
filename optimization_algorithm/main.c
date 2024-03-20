@@ -1,6 +1,6 @@
-#include <cmath>
 #include <nlopt.h>
 #include <stdio.h>
+#include <math.h>
 
 int    count = 0;
 double myfunc(unsigned n, const double* x, double* grad, void* func_data) {

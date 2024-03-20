@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(non-linear-constrained-opt CXX)
+project(non-linear-constrained-opt C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_C_STANDARD 23)
 
-set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_C_COMPILER gcc)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall")
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
 
@@ -17,13 +17,7 @@ endif()
 
 # Add main.c and mesh_generation.c to the source files
 set(SOURCES 
-        non-linear-constrained-opt/main.cpp
-        # non-linear-constrained-opt/mesh/mesh.c 
-        # non-linear-constrained-opt/patch/patch.c 
-        # non-linear-constrained-opt/elem/elem.c 
-        # non-linear-constrained-opt/node/node.c 
-        # non-linear-constrained-opt/mesh_IO/mesh_read.c
-        # non-linear-constrained-opt/mesh_IO/helper.c
+        optimization_algorithm/main.c
         )
 
 # Include directories (modify if needed)
