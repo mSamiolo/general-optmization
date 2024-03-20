@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 23)
 
 set(CMAKE_C_COMPILER gcc)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color")
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
 
 # Set default compiler
@@ -18,6 +18,7 @@ endif()
 # Add main.c and mesh_generation.c to the source files
 set(SOURCES 
         optimization_algorithm/main.c
+        optimization_algorithm/merit_function/merit_function.c
         )
 
 # Include directories (modify if needed)

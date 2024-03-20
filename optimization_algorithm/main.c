@@ -1,6 +1,7 @@
-#include <nlopt.h>
-#include <stdio.h>
 #include <math.h>
+#include <nlopt.h>
+#include <optimization_algorithm/merit_function/merit_function.h>
+#include <stdio.h>
 
 int    count = 0;
 double myfunc(unsigned n, const double* x, double* grad, void* func_data) {
@@ -47,18 +48,22 @@ int main() {
     nlopt_add_inequality_constraint(opt, my_contraint, &data[0], 1e-8);
     nlopt_add_inequality_constraint(opt, my_contraint, &data[1], 1e-8);
 
-    nlopt_set_xtol_rel(opt, 1e-9);
+    nlopt_set_xtol_rel(opt, 1e-5);
 
     double x[2] = {1.234, 5.678}; /* `*`some` `initial` `guess`*` */
     double minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
+    printf("variance of all elements = %.2f\n", variance(2, x));
 
     if (nlopt_optimize(opt, x, &minf) < 0) {
         printf("nlopt failed!\n");
     } else {
         printf("found minimum at f(%g,%g) = %0.10g\n", x[0], x[1], minf);
+        printf("found minimum after %d evaluations\n", count);
     }
-    printf("found minimum after %d evaluations\n", count);
+
     nlopt_destroy(opt);
+
+    printf("variance of all elements = %.6f\n", variance(2, x));
 
     return 0;
 }
