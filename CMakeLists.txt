@@ -10,6 +10,22 @@ set(CMAKE_C_COMPILER gcc)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color")
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
 
+# target_include_directories(${PROJECT_NAME} 
+#                            PUBLIC
+#                            ${CMAKE_SOURCE_DIR}/external/tomlc99)
+
+# ExternalProject_Add(
+#     tomlc99
+#     PREFIX ${CMAKE_SOURCE_DIR}/external/tomlc99
+#     GIT_REPOSITORY https://github.com/cktan/tomlc99.git
+#     TIMEOUT 10
+#     UPDATE_COMMAND ""
+#     CONFIGURE_COMMAND ""
+#     BUILD_COMMAND make
+#     INSTALL_COMMAND ""
+#     LOG_DOWNLOAD ON
+# )
+
 # Set default compiler
 if (NOT CMAKE_C_COMPILER)
     set(CMAKE_C_COMPILER clang)

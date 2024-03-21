@@ -3,6 +3,8 @@
 #include <optimization_algorithm/merit_function/merit_function.h>
 #include <stdio.h>
 
+#define DESIGN_VARIABLE_LOCATION "data/design_variable"
+
 int    count = 0;
 double myfunc(unsigned n, const double* x, double* grad, void* func_data) {
 
@@ -50,6 +52,27 @@ int main() {
 
     nlopt_set_xtol_rel(opt, 1e-5);
 
+    FILE* file;
+    float value, updated_value;
+
+    // Open the file "design_variable" for reading
+    file = fopen(DESIGN_VARIABLE_LOCATION, "r");
+
+    if (file == NULL) {
+        perror("Error opening file " DESIGN_VARIABLE_LOCATION " ");
+        return -1;
+    }
+
+    // Read values from the file one by one
+    while (fscanf(file, "%f", &value) == 1) {
+        // Update the value with + 1
+        updated_value = value + 1.0;
+
+        // Print the updated value (simulate writing to the file)
+        printf("%.1f\n", updated_value);
+    }
+
+    // Close the file
     double x[2] = {1.234, 5.678}; /* `*`some` `initial` `guess`*` */
     double minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
     printf("variance of all elements = %.2f\n", variance(2, x));
@@ -62,6 +85,7 @@ int main() {
     }
 
     nlopt_destroy(opt);
+    fclose(file);
 
     printf("variance of all elements = %.6f\n", variance(2, x));
 
