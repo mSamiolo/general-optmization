@@ -1,20 +1,38 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# Qtool Optimization Algorithm Implementation
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+This project addresses the challenge of transforming real-world constraints into a format suitable for solving nonlinear optimization problems.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Project Overview
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Providing code or libraries to automate the process of idealizing and incorporating constraints into MMA-based optimization problems.
+
+**Algorithm:** Method of Moving Asymptotes (MMA)
+
+
+## Dependencies 
+
+To compile the program, you will need the following libraries:
+
+- **libnlopt**: A library for nonlinear optimization. You can find more information about it [here](https://github.com/stevengj/nlopt).
+- **libmath**: Standard math library, often included in standard C libraries.
+
+## Build
+
+To compile the program using CMake, follow these steps:
+
+1. **Install Dependencies**: Ensure that you have the necessary dependencies installed on your system. You can typically install these using your package manager.
+
+2. **Generare build process**: In your project directory, where the `CMakeLists.txt` file is present run:
+
+```sh
+cd build
+cmake ..
+```
+
+3. **Build**: Run make
+
+```sh
+# From the build directory
+make
+```
