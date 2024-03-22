@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(non-linear-constrained-opt C)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+################################################################
+#                     Compiler directives
+################################################################
+
 set(CMAKE_C_STANDARD 23)
-
 set(CMAKE_C_COMPILER gcc)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color")
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color") # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
 
-# Set default compiler
 if (NOT CMAKE_C_COMPILER)
     set(CMAKE_C_COMPILER clang)
 endif()
@@ -44,6 +44,7 @@ endif()
 set(SOURCES 
         optimization_algorithm/main.c
         optimization_algorithm/merit_function/merit_function.c
+        optimization_algorithm/input_output/io.c
         )
 
 set(SOURCES_TOML_LIB 
