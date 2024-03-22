@@ -10,15 +10,55 @@ set(CMAKE_C_COMPILER gcc)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color")
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
 
-# target_include_directories(${PROJECT_NAME} 
-#                            PUBLIC
-#                            ${CMAKE_SOURCE_DIR}/external/tomlc99)
+# Set default compiler
+if (NOT CMAKE_C_COMPILER)
+    set(CMAKE_C_COMPILER clang)
+endif()
+
+################################################################
+#                  Download Git submodules
+################################################################
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    # Update submodules as needed
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+    if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+    endif()
+endif()
+
+# if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/repo/CMakeLists.txt")
+#     message(FATAL_ERROR "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+# endif()
+
+
+################################################################
+#                  Source file declaration
+################################################################
+set(SOURCES 
+        optimization_algorithm/main.c
+        optimization_algorithm/merit_function/merit_function.c
+        )
+
+set(SOURCES_TOML_LIB 
+                    external/tomlc99/toml.c
+                    external/tomlc99/toml_cat.c  
+                     )
+
+##                              TO BE USED INSTEAD OF THE ABOVE
+# include(ExternalProject)
 
 # ExternalProject_Add(
-#     tomlc99
-#     PREFIX ${CMAKE_SOURCE_DIR}/external/tomlc99
-#     GIT_REPOSITORY https://github.com/cktan/tomlc99.git
-#     TIMEOUT 10
+#     tomlc99 
+#     GIT_REPOSITORY "https://github.com/cktan/tomlc99"
+#     GIT_TAG "master"
+#     SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/tomlc99"
 #     UPDATE_COMMAND ""
 #     CONFIGURE_COMMAND ""
 #     BUILD_COMMAND make
@@ -26,24 +66,21 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color")
 #     LOG_DOWNLOAD ON
 # )
 
-# Set default compiler
-if (NOT CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER clang)
-endif()
 
-# Add main.c and mesh_generation.c to the source files
-set(SOURCES 
-        optimization_algorithm/main.c
-        optimization_algorithm/merit_function/merit_function.c
-        )
+################################################################
+#                  Library definition
+################################################################                     
+add_library(toml ${SOURCES_TOML_LIB})
 
-# Include directories (modify if needed)
+
+################################################################
+#                  Preprocessors definition
+################################################################                     
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-# include_directories(/usr/local/lib/nlopt-2.7.1/src/api/)  # Adjust path
 
 # Add an executable target
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 ## If you have precompiled headers you can add them like this
 #target_precompiled_headers(easy-fem PRIVATE "${CMAKE_SOURCE_DIR}/src/pch.h")
-target_link_libraries(${PROJECT_NAME} nlopt m)
+target_link_libraries(${PROJECT_NAME} nlopt m toml)
