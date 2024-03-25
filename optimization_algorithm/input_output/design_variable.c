@@ -21,40 +21,39 @@ double* read_design_variable(char* design_var_path) {
     file = fopen(file_path, "r");
 
     if (file == NULL) {
-        fprintf(stderr, "Error is: %s - File that has been searched is: %s: \n",
-                strerror(errno), file_path);
+        fprintf(stderr, "Error is: %s - File that has been searched is: %s: \n", strerror(errno),
+                file_path);
         exit(-1);
     }
 
     int count = 0;
 
-    // // Read values from the file one by one
-    // while (fscanf(file, "%f", &value) == 1) {
-    //     // Update the value with + 1
-    //     updated_value = value + 1.0;
-    //     // Print the updated value (simulate writing to the file)
-    //     printf("%.1f\n", updated_value);
-    //     count++;
-    // }
+    // Scan until the character '}' is encountered
+    double density_value;
+    int    read_float_number = 0;
 
-    // Skip header information (optional)
+    while (fscanf(file, " %c", &ch) != EOF) {
 
-    // // Read character by character and increment count for newlines
-    // while ((ch = fgetc(file)) != EOF) {
-    //     if (ch == '\n') {
-    //         count++;
-    //     }
-    // }
+        if (ch == '}') {
+            // After encountering '}', read the float number
+            read_float_number = 1;
+            fscanf(file, " ");
+        }
 
-    double num;
-    while (fscanf(file, "%lf", &num) == 1) {
-        printf("Value of n=%f\n", num);
-    };
+        if (read_float_number) {
+            if (fscanf(file, "%lf", &density_value) == 1) {
+                count++;
+                printf("Number after '}': %f\n", density_value);
+            } else {
+                printf("Error reading float number from design_param.\n");
+            }
+        }
+    }
 
     printf("count %d\n", count);
 
-    double* design_variable = (double*)malloc(sizeof(double) * count);
-
+    // double* design_variable = (double*)malloc(sizeof(double) * count);
     // return design_variable;
+
     return NULL;
 };
