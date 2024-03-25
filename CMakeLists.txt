@@ -44,7 +44,9 @@ endif()
 set(SOURCES 
         optimization_algorithm/main.c
         optimization_algorithm/merit_function/merit_function.c
-        optimization_algorithm/input_output/io.c
+        optimization_algorithm/input_output/input_output.c
+        optimization_algorithm/input_output/design_variable.c
+        optimization_algorithm/merit_function/merit_function.c
         )
 
 set(SOURCES_TOML_LIB 
