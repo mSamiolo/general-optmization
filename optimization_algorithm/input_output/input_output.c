@@ -1,6 +1,8 @@
-#include <optimization_algorithm/input_output/io.h>
+#include <optimization_algorithm/input_output/input_output.h>
 
-static void error(const char* msg, const char* msg1) {
+
+
+void error(const char* msg, const char* msg1) {
     fprintf(stderr, "ERROR: %s%s\n", msg, msg1 ? msg1 : "");
     exit(1);
 }
@@ -15,22 +17,29 @@ void print_structures(toml_datum_t problem_name, toml_array_t* design_param_beta
             break;
         printf("%lf ", (double)beta.u.d);
     }
-    
+
     printf("\n");
 }
 
-void load_toml(const char* filename) {
-    FILE* fp;
+void load_toml(const char* config_file_path) {
+
+    // DATA
+
+    FILE* file;
     char  errbuf[200];
 
-    // Open TOML file
+    // CODE - Open TOML file
 
-    fp = fopen(filename, "r");
-    if (!fp) {
+    if (config_file_path == NULL) {
+        config_file_path = "data/case/config.toml";
+    }
+
+    file = fopen(config_file_path, "r");
+    if (!file) {
         error("cannot open file: - ", strerror(errno));
     }
 
-    toml_table_t* conf = toml_parse_file(fp, errbuf, sizeof(errbuf));
+    toml_table_t* conf = toml_parse_file(file, errbuf, sizeof(errbuf));
 
     if (!conf) {
         error("cannot parse - ", errbuf);
@@ -70,5 +79,5 @@ void load_toml(const char* filename) {
 
     free(problem_name.u.s);
     toml_free(conf);
-    fclose(fp);
+    fclose(file);
 }
