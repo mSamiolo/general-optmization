@@ -26,7 +26,8 @@ To compile the program using CMake, follow these steps:
 
 ```sh
 cd build
-cmake ..
+# The flag -DNLOPT_CXX=OFF is necessary to not compile the C++ interface of nlopt 
+cmake -DNLOPT_CXX=OFF .. 
 ```
 
 3. **Build**: Run make

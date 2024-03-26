@@ -7,6 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #                     Compiler directives
 ################################################################
 
+add_subdirectory(external/nlopt)
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_COMPILER gcc)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -Wall -fdiagnostics-color") # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -O1")
@@ -55,20 +57,6 @@ set(SOURCES_TOML_LIB
                      )
 
 ##                              TO BE USED INSTEAD OF THE ABOVE
-# include(ExternalProject)
-
-# ExternalProject_Add(
-#     tomlc99 
-#     GIT_REPOSITORY "https://github.com/cktan/tomlc99"
-#     GIT_TAG "master"
-#     SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/tomlc99"
-#     UPDATE_COMMAND ""
-#     CONFIGURE_COMMAND ""
-#     BUILD_COMMAND make
-#     INSTALL_COMMAND ""
-#     LOG_DOWNLOAD ON
-# )
-
 
 ################################################################
 #                  Library definition
