@@ -6,12 +6,17 @@
 #define DESIGN_VARIABLE_LOCATION getenv("DESIGN_VARIABLE_LOCATION")
 #define GO_ADDITIVE_CONFIG_PATH getenv("GO_ADDITIVE_CONFIG_PATH")
 
-int    count = 0;
+int    iter = 0;
 double myfunc(unsigned n, const double* x, double* grad, void* func_data);
 
 int main(int argc, char* argv[]) {
 
+    // ARGS
+
+    int n_design_var = 2;
+
     // DATA
+
     double    lower_bound[2] = {-HUGE_VAL, 0}; /* lower bounds */
     nlopt_opt opt;
 
@@ -35,36 +40,28 @@ int main(int argc, char* argv[]) {
 
     nlopt_add_inequality_constraint(opt, my_contraint, &data[0], 1e-8);
     nlopt_add_inequality_constraint(opt, my_contraint, &data[1], 1e-8);
-
     nlopt_set_xtol_rel(opt, 1e-5);
 
-    // Close the file
-
-    double* xp = read_design_variable(DESIGN_VARIABLE_LOCATION);
-    double x[2] = {1.234, 5.678}; /* `*`some` `initial` `guess`*` */
-
-    double minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
-    printf("variance of all elements = %.2f\n", variance(2, x));
+    // double  x[2] = {1.234, 5.678}; /* `*`some` `initial` `guess`*` */
+    double* x = read_design_variable(DESIGN_VARIABLE_LOCATION, n_design_var);
+    double  minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
 
     if (nlopt_optimize(opt, x, &minf) < 0) {
         printf("nlopt failed!\n");
     } else {
         printf("found minimum at f(%g,%g) = %0.10g\n", x[0], x[1], minf);
-        printf("found minimum after %d evaluations\n", count);
+        printf("found minimum after %d evaluations\n", iter);
     }
 
+    free(x);
     nlopt_destroy(opt);
-
-    // fclose(file);
-
-    printf("variance of all elements = %.6f\n", variance(2, x));
 
     return 0;
 }
 
 double myfunc(unsigned n, const double* x, double* grad, void* func_data) {
 
-    // count++;
+    iter++;
 
     // if the parameter grad is not NULL
     if (grad) {

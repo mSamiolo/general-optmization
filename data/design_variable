@@ -11,12 +11,11 @@
 \\---------------------------------------------------------------------------\\
 
 {
-    version     1.0;
-    format      ascii;
-    class       field;
-    object      design_variable;
+    version     XX; //1.0;
+    format      XX; //ascii;
+    class       XX; //field;
+    object      XX; //design_variable;
 }
 
-1.234,
-4.678,
-6.378,
+121.234,
+100.678

@@ -9,6 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-double* read_design_variable(char* filename);
+double* read_design_variable(char* filename, int n_design_var);
 
 #endif

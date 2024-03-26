@@ -1,49 +1,48 @@
 #include <optimization_algorithm/input_output/design_variable.h>
 #include <stdio.h>
 
-double* read_design_variable(char* design_var_path) {
+double* read_design_variable(char* design_var_path, int n_design_var) {
 
     // DATA
 
-    FILE* file;
-    float value, updated_value;
-    char* file_path;
-    char  ch;
+    FILE*   file;
+    char    ch;
+    int     count = 0;
+    double  density_value;
+    int     read_float_number = 0;
+    double* design_variable   = (double*)malloc(sizeof(double) * n_design_var);
 
     // CODE
 
     if (design_var_path == NULL) {
-        file_path = "data/design_variable";
-    } else {
-        file_path = design_var_path;
+        design_var_path = "data/design_variable";
+        printf("Design variable path not specified. Using default: %s\n",
+               design_var_path);
     }
 
-    file = fopen(file_path, "r");
+    file = fopen(design_var_path, "r");
 
     if (file == NULL) {
-        fprintf(stderr, "Error is: %s - File that has been searched is: %s: \n", strerror(errno),
-                file_path);
+        fprintf(stderr, "Error is: %s - File that has been searched is: %s: \n",
+                strerror(errno), design_var_path);
         exit(-1);
     }
 
-    int count = 0;
-
     // Scan until the character '}' is encountered
-    double density_value;
-    int    read_float_number = 0;
 
     while (fscanf(file, " %c", &ch) != EOF) {
 
+        // After encountering '}', read the float number
         if (ch == '}') {
-            // After encountering '}', read the float number
             read_float_number = 1;
             fscanf(file, " ");
         }
 
         if (read_float_number) {
             if (fscanf(file, "%lf", &density_value) == 1) {
-                count++;
                 printf("Number after '}': %f\n", density_value);
+                design_variable[count] = density_value;
+                count++;
             } else {
                 printf("Error reading float number from design_param.\n");
             }
@@ -52,8 +51,9 @@ double* read_design_variable(char* design_var_path) {
 
     printf("count %d\n", count);
 
-    // double* design_variable = (double*)malloc(sizeof(double) * count);
-    // return design_variable;
+    // FREE MEMORY
+    
+    fclose(file);
 
-    return NULL;
+    return design_variable;
 };
