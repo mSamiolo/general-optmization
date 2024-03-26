@@ -4,3 +4,6 @@
 [submodule "external/tomlc99"]
 	path = external/tomlc99
 	url = https://github.com/cktan/tomlc99.git
+[submodule "external/nlopt"]
+	path = external/nlopt
+	url = https://github.com/stevengj/nlopt.git
