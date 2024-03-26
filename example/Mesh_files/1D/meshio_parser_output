@@ -1,0 +1,11 @@
+
+<meshio mesh object>
+  Number of points: 28
+  Number of cells:
+    vertex: 1
+    vertex: 1
+    line: 27
+  Cell sets: out, in, curve_domain, gmsh:bounding_entities
+  Point data: gmsh:dim_tags
+  Cell data: gmsh:physical, gmsh:geometrical
+  Field data: out, in, curve_domain
