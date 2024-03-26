@@ -1,5 +1,6 @@
+#include <external/tomlc99/toml.h>
 #include <optimization_algorithm/input_output/input_output.h>
-
+#include <stdio.h>
 
 
 void error(const char* msg, const char* msg1) {
@@ -7,21 +8,23 @@ void error(const char* msg, const char* msg1) {
     exit(1);
 }
 
-void print_structures(toml_datum_t problem_name, toml_array_t* design_param_beta) {
-    printf("Problem: %s\n", problem_name.u.s);
-    printf("Beta is: ");
+// void print_structures(toml_datum_t problem_name, toml_array_t* design_param_beta) {
+//     printf("Problem: %s\n", problem_name.u.s);
+//     printf("Beta is: ");
 
-    for (int i = 0;; i++) {
-        toml_datum_t beta = toml_double_at(design_param_beta, i);
-        if (!beta.ok)
-            break;
-        printf("%lf ", (double)beta.u.d);
-    }
+//     for (int i = 0;; i++) {
+//         toml_datum_t beta = toml_double_at(design_param_beta, i);
+//         if (!beta.ok)
+//             break;
+//         printf("%lf ", (double)beta.u.d);
+//     }
 
-    printf("\n");
-}
+//     printf("\n");
+// }
 
-void load_toml(const char* config_file_path) {
+void instantiate_case_from_config_toml(const char* config_file_path,
+                                       const char* desing_var_file_path,
+                                       double* design_variable, int n_design_var) {
 
     // DATA
 
@@ -32,6 +35,9 @@ void load_toml(const char* config_file_path) {
 
     if (config_file_path == NULL) {
         config_file_path = "data/case/config.toml";
+        printf("GO_ADDITIVE_CONFIG_PATH not specified, reading config file from defualt "
+               "location: %s\n",
+               config_file_path);
     }
 
     file = fopen(config_file_path, "r");
@@ -62,6 +68,12 @@ void load_toml(const char* config_file_path) {
         error("missing [Design_Parameters] on the config.toml file", "");
     }
 
+    toml_table_t* objective_descriptor = toml_table_in(conf, "Objective");
+
+    if (!objective_descriptor) {
+        error("missing [Objective] on the config.toml file", "");
+    }
+
     // Dealing with TOML table contents
 
     toml_datum_t problem_name = toml_string_in(problem_descriptor, "Name");
@@ -75,9 +87,30 @@ void load_toml(const char* config_file_path) {
         error("cannot read Design_Parameters.beta", "");
     }
 
-    print_structures(problem_name, design_param_beta);
+    toml_datum_t objective_init = toml_double_in(objective_descriptor, "p_init");
+
+    if (!objective_init.ok) {
+        error("cannot read Objective.p_init", "");
+    }
+
+    double init_condition = objective_init.u.d;
+
+    instantiate_qtool_file(desing_var_file_path, design_variable, &init_condition,
+                           n_design_var);
+
+    // print_structures(problem_name, design_param_beta);
 
     free(problem_name.u.s);
     toml_free(conf);
     fclose(file);
+}
+
+void instantiate_qtool_file(const char* file_path, double* design_variable,
+                            double* init_condition, int n_design_var) {
+
+    for (int i = 0; i < n_design_var; i++) {
+        design_variable[i] = *init_condition;
+    }
+
+    write_design_param(file_path, design_variable, n_design_var);
 }

@@ -20,20 +20,15 @@ int main(int argc, char* argv[]) {
     double    lower_bound[2] = {-HUGE_VAL, 0}; /* lower bounds */
     nlopt_opt opt;
 
+    // double  x[2] = {2.0, 1.0};
+    double* x = (double*)malloc(sizeof(double) * n_design_var);
+
     // CODE
 
-    // Open the file "design_variable" for reading
-    load_toml(GO_ADDITIVE_CONFIG_PATH);
+    instantiate_case_from_config_toml(GO_ADDITIVE_CONFIG_PATH, DESIGN_VARIABLE_LOCATION, x, n_design_var);
 
-    opt = nlopt_create(NLOPT_LD_MMA, 2); /* alogotithm and dimensionality */
-
+    opt = nlopt_create(NLOPT_LD_MMA, n_design_var); /* alogotithm and dimensionality */
     nlopt_set_lower_bounds(opt, lower_bound);
-
-    /*
-    // typedef double (*nlopt_func) (unsigned n, const double *x,
-    //                           double *gradient,    //  NULL if not needed
-    //                           void *func_data);
-    */
     nlopt_set_min_objective(opt, myfunc, NULL);
 
     myConstrainData data[2] = {{2, 0}, {-1, 1}};
@@ -42,9 +37,9 @@ int main(int argc, char* argv[]) {
     nlopt_add_inequality_constraint(opt, my_contraint, &data[1], 1e-8);
     nlopt_set_xtol_rel(opt, 1e-5);
 
-    // double  x[2] = {1.234, 5.678}; /* `*`some` `initial` `guess`*` */
-    double* x = read_design_variable(DESIGN_VARIABLE_LOCATION, n_design_var);
-    double  minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
+    // x = read_design_variable(DESIGN_VARIABLE_LOCATION, n_design_var);
+
+    double minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
 
     if (nlopt_optimize(opt, x, &minf) < 0) {
         printf("nlopt failed!\n");
@@ -52,6 +47,8 @@ int main(int argc, char* argv[]) {
         printf("found minimum at f(%g,%g) = %0.10g\n", x[0], x[1], minf);
         printf("found minimum after %d evaluations\n", iter);
     }
+
+    write_design_param(DESIGN_VARIABLE_LOCATION, x, n_design_var);
 
     free(x);
     nlopt_destroy(opt);

@@ -15,7 +15,7 @@ double* read_design_variable(char* design_var_path, int n_design_var) {
     // CODE
 
     if (design_var_path == NULL) {
-        design_var_path = "data/design_variable";
+        design_var_path = DEFAULT_DESIGN_VARIABLE_FILE_PATH;
         printf("Design variable path not specified. Using default: %s\n",
                design_var_path);
     }
@@ -49,11 +49,37 @@ double* read_design_variable(char* design_var_path, int n_design_var) {
         }
     }
 
-    printf("count %d\n", count);
-
     // FREE MEMORY
-    
+
     fclose(file);
 
     return design_variable;
 };
+
+void write_design_param(const char* file_path, double* design_variable,
+                        int n_design_var) {
+
+    FILE* desing_param_file;
+
+    if (file_path == NULL) {
+        printf("DESIGN_VARIABLE_LOCATION not specified, writing design parameter using "
+               "default path: %s\n",
+               DEFAULT_DESIGN_VARIABLE_FILE_PATH);
+        file_path = DEFAULT_DESIGN_VARIABLE_FILE_PATH;
+    }
+
+    desing_param_file = fopen(file_path, "w");
+
+    if (desing_param_file == NULL) {
+        fprintf(stderr, "Not possible to instantiate qtool file\n");
+        exit(EXIT_FAILURE); // Exit the program with a failure status
+    }
+
+    fprintf(desing_param_file, HEADER);
+
+    for (int i = 0; i < n_design_var; i++) {
+        fprintf(desing_param_file, "%lf,\n", design_variable[i]);
+    }
+
+    fclose(desing_param_file);
+}
