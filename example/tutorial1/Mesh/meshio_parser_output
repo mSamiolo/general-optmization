@@ -1,0 +1,15 @@
+
+<meshio mesh object>
+  Number of points: 3658
+  Number of cells:
+    triangle: 576
+    triangle: 581
+    triangle: 581
+    triangle: 799
+    tetra: 4874
+    tetra: 2792
+    tetra: 6643
+  Cell sets: up, down, non_optimize, optimize, gmsh:bounding_entities
+  Point data: gmsh:dim_tags
+  Cell data: gmsh:physical, gmsh:geometrical
+  Field data: up, down, non_optimize, optimize

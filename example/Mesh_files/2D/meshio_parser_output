@@ -1,0 +1,16 @@
+
+<meshio mesh object>
+  Number of points: 52
+  Number of cells:
+    vertex: 1
+    vertex: 1
+    vertex: 1
+    vertex: 1
+    line: 13
+    line: 13
+    line: 13
+    line: 13
+  Cell sets: c1, c2, c3, c4, left, down, right, up, gmsh:bounding_entities
+  Point data: gmsh:dim_tags
+  Cell data: gmsh:physical, gmsh:geometrical
+  Field data: c1, c2, c3, c4, left, down, right, up

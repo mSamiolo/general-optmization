@@ -1,0 +1,6 @@
+[submodule "data/case"]
+	path = data/case
+	url = git@ssh.dev.azure.com:v3/goadditive/GA/user_case
+[submodule "external/tomlc99"]
+	path = external/tomlc99
+	url = https://github.com/cktan/tomlc99.git
