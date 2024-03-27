@@ -35,3 +35,9 @@ cmake ..
 # From the build directory
 make
 ```
+
+## Tools
+
+A custom VTK writer is present to understand how to assemble unstructured mesh and results. Located at:
+
+- tools/make_vtu.py
