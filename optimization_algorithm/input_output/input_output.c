@@ -1,30 +1,13 @@
-#include <external/tomlc99/toml.h>
 #include <optimization_algorithm/input_output/input_output.h>
-#include <stdio.h>
-
 
 void error(const char* msg, const char* msg1) {
     fprintf(stderr, "ERROR: %s%s\n", msg, msg1 ? msg1 : "");
     exit(1);
 }
 
-// void print_structures(toml_datum_t problem_name, toml_array_t* design_param_beta) {
-//     printf("Problem: %s\n", problem_name.u.s);
-//     printf("Beta is: ");
-
-//     for (int i = 0;; i++) {
-//         toml_datum_t beta = toml_double_at(design_param_beta, i);
-//         if (!beta.ok)
-//             break;
-//         printf("%lf ", (double)beta.u.d);
-//     }
-
-//     printf("\n");
-// }
-
-void instantiate_case_from_config_toml(const char* config_file_path,
-                                       const char* desing_var_file_path,
-                                       double* design_variable, int n_design_var) {
+void write_initial_condition(const char* config_file_path,
+                             const char* desing_var_file_path, double* design_variable,
+                             int n_design_var) {
 
     // DATA
 
@@ -51,22 +34,22 @@ void instantiate_case_from_config_toml(const char* config_file_path,
         error("cannot parse - ", errbuf);
     }
 
-    //  Toml table dealing
+    // // ---------   Toml table dealing ------------- //
 
-    toml_table_t* problem_descriptor = toml_table_in(conf, "Problem");
-    if (!problem_descriptor) {
-        error("missing [Problem] on the config.toml file", "");
-    }
+    // toml_table_t* problem_descriptor = toml_table_in(conf, "Problem");
+    // if (!problem_descriptor) {
+    //     error("missing [Problem] on the config.toml file", "");
+    // }
 
-    if (!problem_descriptor) {
-        error("missing [Problem] on the config.toml file", "");
-    }
+    // if (!problem_descriptor) {
+    //     error("missing [Problem] on the config.toml file", "");
+    // }
 
-    toml_table_t* design_param_descriptor = toml_table_in(conf, "Design_Parameters");
+    // toml_table_t* design_param_descriptor = toml_table_in(conf, "Design_Parameters");
 
-    if (!design_param_descriptor) {
-        error("missing [Design_Parameters] on the config.toml file", "");
-    }
+    // if (!design_param_descriptor) {
+    //     error("missing [Design_Parameters] on the config.toml file", "");
+    // }
 
     toml_table_t* objective_descriptor = toml_table_in(conf, "Objective");
 
@@ -74,18 +57,18 @@ void instantiate_case_from_config_toml(const char* config_file_path,
         error("missing [Objective] on the config.toml file", "");
     }
 
-    // Dealing with TOML table contents
+    // // ---------   Dealing with TOML table contents ------------- //
 
-    toml_datum_t problem_name = toml_string_in(problem_descriptor, "Name");
-    if (!problem_name.ok) {
-        error("cannot read Problem.Name", "");
-    }
+    // toml_datum_t problem_name = toml_string_in(problem_descriptor, "Name");
+    // if (!problem_name.ok) {
+    //     error("cannot read Problem.Name", "");
+    // }
 
-    toml_array_t* design_param_beta = toml_array_in(design_param_descriptor, "beta");
+    // toml_array_t* design_param_beta = toml_array_in(design_param_descriptor, "beta");
 
-    if (!design_param_beta) {
-        error("cannot read Design_Parameters.beta", "");
-    }
+    // if (!design_param_beta) {
+    //     error("cannot read Design_Parameters.beta", "");
+    // }
 
     toml_datum_t objective_init = toml_double_in(objective_descriptor, "p_init");
 
@@ -93,24 +76,25 @@ void instantiate_case_from_config_toml(const char* config_file_path,
         error("cannot read Objective.p_init", "");
     }
 
-    double init_condition = objective_init.u.d;
+    double design_parameter_init = objective_init.u.d;
 
-    instantiate_qtool_file(desing_var_file_path, design_variable, &init_condition,
-                           n_design_var);
+    overwrite_design_param(desing_var_file_path, design_variable, &design_parameter_init,
+                          n_design_var);
 
     // print_structures(problem_name, design_param_beta);
+    write_design_param(desing_var_file_path, design_variable, n_design_var);
 
-    free(problem_name.u.s);
+    // free(problem_name.u.s);
     toml_free(conf);
     fclose(file);
 }
 
-void instantiate_qtool_file(const char* file_path, double* design_variable,
-                            double* init_condition, int n_design_var) {
+
+void overwrite_design_param(const char* file_path, double* design_variable,
+                           double* init_condition, int n_design_var) {
 
     for (int i = 0; i < n_design_var; i++) {
         design_variable[i] = *init_condition;
     }
 
-    write_design_param(file_path, design_variable, n_design_var);
 }

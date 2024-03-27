@@ -4,7 +4,6 @@
 #include <optimization_algorithm/input_output/header.h>
 
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 

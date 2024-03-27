@@ -20,12 +20,12 @@ int main(int argc, char* argv[]) {
     double    lower_bound[2] = {-HUGE_VAL, 0}; /* lower bounds */
     nlopt_opt opt;
 
-    // double  x[2] = {2.0, 1.0};
     double* x = (double*)malloc(sizeof(double) * n_design_var);
 
     // CODE
 
-    instantiate_case_from_config_toml(GO_ADDITIVE_CONFIG_PATH, DESIGN_VARIABLE_LOCATION, x, n_design_var);
+    // write_initial_condition(GO_ADDITIVE_CONFIG_PATH, DESIGN_VARIABLE_LOCATION, x,
+    //                         n_design_var);
 
     opt = nlopt_create(NLOPT_LD_MMA, n_design_var); /* alogotithm and dimensionality */
     nlopt_set_lower_bounds(opt, lower_bound);
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     nlopt_add_inequality_constraint(opt, my_contraint, &data[1], 1e-8);
     nlopt_set_xtol_rel(opt, 1e-5);
 
-    // x = read_design_variable(DESIGN_VARIABLE_LOCATION, n_design_var);
+    x = read_design_variable(DESIGN_VARIABLE_LOCATION, n_design_var);
 
     double minf; /* `*`the` `minimum` `objective` `value,` `upon` `return`*` */
 

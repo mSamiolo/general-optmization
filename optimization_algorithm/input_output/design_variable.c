@@ -1,5 +1,4 @@
 #include <optimization_algorithm/input_output/design_variable.h>
-#include <stdio.h>
 
 double* read_design_variable(char* design_var_path, int n_design_var) {
 
@@ -74,6 +73,8 @@ void write_design_param(const char* file_path, double* design_variable,
         fprintf(stderr, "Not possible to instantiate qtool file\n");
         exit(EXIT_FAILURE); // Exit the program with a failure status
     }
+
+    // Ouput file stream
 
     fprintf(desing_param_file, HEADER);
 
