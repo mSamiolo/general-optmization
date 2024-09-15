@@ -1,5 +1,5 @@
 
-# Qtool Optimization Algorithm Implementation
+# Optimization Algorithm Implementation
 
 This project addresses the challenge of transforming real-world constraints into a format suitable for solving nonlinear optimization problems.
 
